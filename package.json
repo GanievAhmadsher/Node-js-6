@@ -1,0 +1,12 @@
+{
+  "name": "dars6",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "app": "node app.js"
+  },
+  "keywords": [],
+  "author": "Node.js 6",
+  "license": "ISC",
+  "description": ""
+}
