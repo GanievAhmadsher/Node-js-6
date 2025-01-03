@@ -2,6 +2,7 @@
   "name": "dars6",
   "version": "1.0.0",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "app": "node app.js",
     "home": "node home.js"
