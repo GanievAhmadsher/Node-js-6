@@ -1,9 +1,9 @@
 import http from "node:http";
-import fs from "node:fs/promises";
+import fs from "node:fs";
 import path, { parse } from "node:path";
 import { Transform } from "node:stream";
 // ? Data
-fs.readFile(path.join(process.cwd(),"users.json"),'utf-8').then((data)=>{})
+const readStreamU = fs.createReadStream(path.join(process.cwd(), "users.json"));
 
 const readStreamP = fs.createReadStream(path.join(process.cwd(), "posts.json"));
 
@@ -19,6 +19,29 @@ const server = http.createServer((request, response) => {
       }
       case "POST": {
         request.on("data", (chunkData) => {
+          const transform = new Transform({
+            transform: function (chunk, encoding, callbackFn) {
+              callbackFn(
+                null,
+                (() => {
+                  fs.unlink(
+                    path.join(process.cwd(), "users.json"),
+                    (err, data) => {}
+                  );
+                  return JSON.stringify([
+                    ...JSON.parse(chunk),
+                    ...JSON.parse(chunkData),
+                  ]);
+                })()
+              );
+            },
+          });
+
+          const writeStreamU = fs.createWriteStream(
+            path.join(process.cwd(), "users.json")
+          );
+
+          readStreamU.pipe(transform).pipe(writeStreamU);
         });
         break;
       }
